@@ -645,6 +645,15 @@ GOOGLE_TOKENINFO_URL = (
     "https://oauth2.googleapis.com/tokeninfo?id_token="
 )
 
+FIREBASE_LOOKUP_URL = (
+    "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key="
+)
+
+FIREBASE_API_KEY = os.getenv(
+    "FIREBASE_API_KEY",
+    "AIzaSyAVJnXy-s3vO7owCqYyUpb2EwQP8oJYJaI"
+)
+
 
 @app.route("/google_login", methods=["POST"])
 def google_login():
@@ -726,6 +735,64 @@ def google_login():
         return jsonify({"ok": False, "error": "invalid or expired token"})
 
     except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.route("/github_login", methods=["POST"])
+def github_login():
+    try:
+        credential = (request.json or {}).get("credential")
+
+        if not credential:
+            return jsonify({"ok": False, "error": "missing credential"})
+
+        payload = json.dumps({"idToken": credential}).encode()
+        req = urllib.request.Request(
+            FIREBASE_LOOKUP_URL + urllib.parse.quote(FIREBASE_API_KEY),
+            data=payload,
+            headers={
+                "Content-Type": "application/json",
+                "User-Agent": "Lucas/1.0"
+            },
+            method="POST"
+        )
+
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            info = json.loads(resp.read().decode())
+
+        firebase_user = (info.get("users") or [None])[0]
+        if not firebase_user:
+            return jsonify({"ok": False, "error": "invalid credential"})
+
+        email = firebase_user.get("email")
+        name = firebase_user.get("displayName") or email or "github_user"
+        base_username = "".join(
+            ch for ch in name if ch.isalnum() or ch == "_"
+        ) or "user"
+
+        user = User.query.filter_by(email=email).first() if email else None
+        if not user:
+            username = base_username
+            suffix = 1
+            while User.query.filter_by(username=username).first():
+                suffix += 1
+                username = base_username + str(suffix)
+
+            user = User(
+                username=username,
+                password=generate_password_hash(uuid.uuid4().hex),
+                email=email
+            )
+            db.session.add(user)
+            db.session.commit()
+
+        session["user_id"] = user.id
+        return jsonify({"ok": True, "username": user.username})
+
+    except urllib.error.HTTPError:
+        return jsonify({"ok": False, "error": "invalid or expired credential"})
+    except Exception as e:
+        db.session.rollback()
         return jsonify({"ok": False, "error": str(e)})
 
 

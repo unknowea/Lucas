@@ -39,17 +39,19 @@ function friendlyError(code){
             "Your browser blocked the sign-in window. " +
             "Allow popups for this site and try again.",
 
-        "auth/operation-not-allowed":
-            "Google sign-in is not enabled yet in the Firebase " +
-            "console for this project.",
-
         "auth/unauthorized-domain":
             "This address is not authorized in Firebase. " +
             "Add it under Authentication > Settings > " +
             "Authorized domains.",
 
         "auth/network-request-failed":
-            "Network problem. Check your internet connection."
+            "Network problem. Check your internet connection.",
+
+        "auth/account-exists-with-different-credential":
+            "An account already exists with a different sign-in method.",
+
+        "auth/operation-not-allowed":
+            "This sign-in provider is not enabled in Firebase yet."
     };
 
     return map[code] ||
@@ -111,16 +113,53 @@ if(googleBtn){
 }
 
 // ==============================================
-// GITHUB SIGN IN (NOT CONFIGURED YET)
+// GITHUB SIGN IN
 // ==============================================
 
 const githubBtn = document.querySelector(".btn-github");
 
 if(githubBtn){
-    githubBtn.addEventListener("click", ()=>{
-        showAuthError(
-            "GitHub sign-in is not set up yet. Use Google or a " +
-            "username and password."
-        );
+    githubBtn.addEventListener("click", async ()=>{
+        hideAuthError();
+
+        if(typeof firebase === "undefined"){
+            showAuthError(
+                "Could not load sign-in service. Check your internet."
+            );
+            return;
+        }
+
+        const provider = new firebase.auth.GithubAuthProvider();
+
+        try{
+            const result =
+                await firebase.auth().signInWithPopup(provider);
+
+            const idToken =
+                await result.user.getIdToken();
+
+            const response = await fetch("/github_login",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    credential:idToken
+                })
+            });
+
+            const data = await response.json();
+
+            if(data.ok){
+                window.location.href = "/";
+            }else{
+                showAuthError(data.error || "GitHub sign-in failed.");
+            }
+        }
+        catch(err){
+            showAuthError(
+                friendlyError(err && err.code)
+            );
+        }
     });
 }
