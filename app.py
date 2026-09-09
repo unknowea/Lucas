@@ -24,6 +24,26 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
+ollama_api_key = os.getenv("OLLAMA_API_KEY")
+ollama_host = os.getenv("OLLAMA_HOST")
+if not ollama_host and ollama_api_key:
+    ollama_host = "https://ollama.com"
+
+ollama_model = os.getenv(
+    "OLLAMA_MODEL",
+    "qwen3-coder:480b-cloud" if os.getenv("VERCEL") else "qwen2.5-coder:3b"
+)
+
+ollama_headers = {}
+if ollama_api_key:
+    ollama_headers["Authorization"] = "Bearer " + ollama_api_key
+
+ollama_client = ollama.Client(
+    host=ollama_host,
+    headers=ollama_headers or None
+) if ollama_host else ollama.Client()
+
+
 db = SQLAlchemy(app)
 
 SYSTEM_PROMPT = """
@@ -337,9 +357,9 @@ def chat():
 
 
 
-        response = ollama.chat(
+        response = ollama_client.chat(
 
-            model="qwen2.5-coder:3b",
+            model=ollama_model,
 
             messages=[
 
@@ -592,8 +612,8 @@ def edit_message():
         db.session.commit()
 
 
-        response = ollama.chat(
-            model="qwen2.5-coder:3b",
+        response = ollama_client.chat(
+            model=ollama_model,
             messages=[
                 {
                     "role": "system",
