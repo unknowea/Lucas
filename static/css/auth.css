@@ -244,6 +244,10 @@ h2{
     text-align:center;
 }
 
+.hidden{
+    display:none;
+}
+
 .alert-error{
     background:rgba(239,65,70,.12);
     color:var(--red);
