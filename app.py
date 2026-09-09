@@ -92,6 +92,8 @@ class User(db.Model):
 
     email = db.Column(db.String(200), unique=True)
 
+    display_name = db.Column(db.String(200))
+
 
 
 class Chat(db.Model):
@@ -129,7 +131,12 @@ def home():
     if "user_id" not in session:
         return redirect("/login")
 
-    return render_template("index.html")
+    user = User.query.get(session["user_id"])
+    if not user:
+        session.clear()
+        return redirect("/login")
+
+    return render_template("index.html", current_user=user)
 
 
 
@@ -152,7 +159,8 @@ def register():
 
         user = User(
             username=username,
-            password=password
+            password=password,
+            display_name=username
         )
 
 
@@ -170,6 +178,20 @@ def register():
             db.session.rollback()
 
             return str(e)
+            return jsonify({
+                "reply": "Error: " + str(e)
+            })
+        
+        except Exception as e:
+            db.session.rollback()
+            if getattr(e, "status_code", None) == 401:
+                return jsonify({
+                    "reply": "Ollama Cloud rejected the API key. "
+                    "Update OLLAMA_API_KEY in Vercel and redeploy."
+                })
+            return jsonify({
+                "reply": "Error: " + str(e)
+            })
 
 
 
@@ -419,9 +441,13 @@ def chat():
 
     except Exception as e:
 
-
         db.session.rollback()
 
+        if getattr(e, "status_code", None) == 401:
+            return jsonify({
+                "reply": "Ollama Cloud rejected the API key. "
+                "Update OLLAMA_API_KEY in Vercel and redeploy."
+            })
 
         return jsonify({
 
@@ -648,6 +674,12 @@ def edit_message():
 
         db.session.rollback()
 
+        if getattr(e, "status_code", None) == 401:
+            return jsonify({
+                "reply": "Ollama Cloud rejected the API key. "
+                "Update OLLAMA_API_KEY in Vercel and redeploy."
+            })
+
         return jsonify({
             "reply": "Error: " + str(e)
         })
@@ -735,12 +767,14 @@ def google_login():
             user = User(
                 username=username,
                 password=generate_password_hash(uuid.uuid4().hex),
-                email=email
+                email=email,
+                display_name=name
             )
             db.session.add(user)
             db.session.commit()
-        elif not user.email:
+        else:
             user.email = email
+            user.display_name = name
             db.session.commit()
 
 
@@ -801,9 +835,13 @@ def github_login():
             user = User(
                 username=username,
                 password=generate_password_hash(uuid.uuid4().hex),
-                email=email
+                email=email,
+                display_name=name
             )
             db.session.add(user)
+            db.session.commit()
+        else:
+            user.display_name = name
             db.session.commit()
 
         session["user_id"] = user.id
@@ -909,6 +947,16 @@ with app.app_context():
                 db.text("ALTER TABLE user ADD COLUMN email VARCHAR(200)")
             )
             conn.commit()
+        if "display_name" not in [c[1] for c in cols]:
+            conn.execute(
+                db.text("ALTER TABLE user ADD COLUMN display_name VARCHAR(200)")
+            )
+            conn.commit()
+        conn.execute(
+            db.text("UPDATE user SET display_name = username "
+                    "WHERE display_name IS NULL")
+        )
+        conn.commit()
 
 
 

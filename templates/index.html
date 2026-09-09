@@ -72,11 +72,11 @@
                     id="profileBtn"
                     type="button">
 
-                <div class="avatar">L</div>
+                <div class="avatar">{{ (current_user.display_name or current_user.username)[:1].upper() }}</div>
 
                 <div class="profile-text">
-                    <strong>Lucas</strong>
-                    <span>lucas@gmail.com</span>
+                    <strong>{{ current_user.display_name or current_user.username }}</strong>
+                    <span>{{ current_user.email or "No email" }}</span>
                 </div>
 
                 <span class="material-symbols-rounded profile-chevron">
@@ -88,11 +88,11 @@
                  id="accountMenu">
 
                 <div class="account-header">
-                    <div class="avatar large">L</div>
+                    <div class="avatar large">{{ (current_user.display_name or current_user.username)[:1].upper() }}</div>
 
                     <div>
-                        <strong>Lucas</strong>
-                        <span>lucas@gmail.com</span>
+                        <strong>{{ current_user.display_name or current_user.username }}</strong>
+                        <span>{{ current_user.email or "No email" }}</span>
                     </div>
                 </div>
 
@@ -484,8 +484,8 @@
                 <div class="avatar large">L</div>
 
                 <div>
-                    <strong>Lucas</strong>
-                    <span>lucas@gmail.com</span>
+                    <strong>{{ current_user.display_name or current_user.username }}</strong>
+                    <span>{{ current_user.email or "No email" }}</span>
                 </div>
 
             </div>
@@ -657,8 +657,8 @@
                 <div class="avatar large">L</div>
 
                 <div>
-                    <strong>Lucas</strong>
-                    <span>lucas@gmail.com</span>
+                    <strong>{{ current_user.display_name or current_user.username }}</strong>
+                    <span>{{ current_user.email or "No email" }}</span>
                 </div>
 
             </div>
