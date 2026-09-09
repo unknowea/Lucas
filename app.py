@@ -8,6 +8,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import uuid
+import os
 
 
 app = Flask(__name__)
@@ -15,7 +16,11 @@ app = Flask(__name__)
 app.secret_key = "bezagpt_secret_key"
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///bezagpt.db"
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
+    database_url = "sqlite:////tmp/bezagpt.db" if os.getenv("VERCEL") else "sqlite:///bezagpt.db"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
