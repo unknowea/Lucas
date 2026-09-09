@@ -1,0 +1,271 @@
+/*==================================================
+         LUCAS AUTH - CHATGPT STYLE
+==================================================*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+:root{
+    --bg:#212121;
+    --card:#2f2f2f;
+    --border:#ffffff1a;
+    --text:#ececec;
+    --muted:#b4b4b4;
+    --accent:#0fa47f;
+    --accent-hover:#0d8f6e;
+    --red:#ef4146;
+}
+
+/*==================================================
+                PAGE
+==================================================*/
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:var(--bg);
+    padding:20px;
+}
+
+.auth-container{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.auth-card{
+    width:100%;
+    max-width:400px;
+    animation:fadeUp .4s ease;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(16px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/*==================================================
+                CARD CONTENT
+==================================================*/
+
+.logo{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:22px;
+}
+
+.brand-mark{
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--accent);
+    color:#fff;
+    font-size:17px;
+    font-weight:700;
+}
+
+.logo h1{
+    color:var(--text);
+    font-size:22px;
+    font-weight:600;
+}
+
+h2{
+    color:var(--text);
+    text-align:center;
+    font-size:26px;
+    font-weight:600;
+    margin-bottom:6px;
+}
+
+.subtitle{
+    color:var(--muted);
+    text-align:center;
+    margin-bottom:24px;
+    font-size:14px;
+}
+
+/*==================================================
+                FORM
+==================================================*/
+
+.auth-form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    margin-bottom:18px;
+}
+
+.auth-form input{
+    width:100%;
+    padding:13px 15px;
+    background:var(--card);
+    color:var(--text);
+    border:1px solid var(--border);
+    border-radius:10px;
+    font-size:15px;
+    transition:border-color .2s ease;
+}
+
+.auth-form input::placeholder{
+    color:#8f8f8f;
+}
+
+.auth-form input:focus{
+    border-color:#8f8f8f;
+}
+
+.auth-form button[type="submit"]{
+    width:100%;
+    margin-top:2px;
+    padding:13px;
+    border-radius:999px;
+    background:#fff;
+    color:#0d0d0d;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:background .2s ease;
+}
+
+.auth-form button[type="submit"]:hover{
+    background:#e8e8e8;
+}
+
+/*==================================================
+                DIVIDER + SOCIAL
+==================================================*/
+
+.divider{
+    display:flex;
+    align-items:center;
+    margin:20px 0;
+}
+
+.divider::before,
+.divider::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--border);
+}
+
+.divider span{
+    padding:0 14px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.social-buttons{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.btn-social{
+    width:100%;
+    padding:13px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-size:14px;
+    font-weight:500;
+    color:var(--text);
+    background:transparent;
+    cursor:pointer;
+    transition:background .2s ease;
+}
+
+.btn-social:hover{
+    background:var(--card);
+}
+
+.btn-social svg{
+    width:18px;
+    height:18px;
+    flex-shrink:0;
+}
+
+/*==================================================
+                FOOTER
+==================================================*/
+
+.footer{
+    margin-top:26px;
+    text-align:center;
+    color:var(--muted);
+    font-size:14px;
+}
+
+.footer a{
+    color:var(--text);
+    font-weight:600;
+    text-decoration:underline;
+    text-underline-offset:3px;
+}
+
+.footer a:hover{
+    color:#fff;
+}
+
+/*==================================================
+                FLASH / ERROR MESSAGES
+==================================================*/
+
+.alert{
+    width:100%;
+    padding:12px 14px;
+    border-radius:10px;
+    margin-bottom:16px;
+    font-size:14px;
+    text-align:center;
+}
+
+.alert-error{
+    background:rgba(239,65,70,.12);
+    color:var(--red);
+    border:1px solid rgba(239,65,70,.35);
+}
+
+.alert-success{
+    background:rgba(15,164,127,.12);
+    color:var(--accent);
+    border:1px solid rgba(15,164,127,.35);
+}
+
+/*==================================================
+                RESPONSIVE
+==================================================*/
+
+@media(max-width:480px){
+    .auth-card{
+        padding:0 6px;
+    }
+
+    h2{
+        font-size:22px;
+    }
+}

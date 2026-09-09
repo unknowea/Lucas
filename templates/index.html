@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucas</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
+          rel="stylesheet">
+</head>
+
+<body>
+<div class="app" id="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <div class="brand">
+                <div class="brand-mark">L</div>
+                <span>Lucas</span>
+            </div>
+
+            <button class="icon-button"
+                    id="closeSidebarBtn"
+                    type="button"
+                    title="Close sidebar">
+                <span class="material-symbols-rounded">
+                    left_panel_close
+                </span>
+            </button>
+        </div>
+
+        <button class="new-chat-button" id="newChatBtn" type="button">
+            <span class="material-symbols-rounded">add</span>
+            <span>New Chat</span>
+        </button>
+
+        <div class="search-box">
+            <span class="material-symbols-rounded">search</span>
+            <input id="searchChats"
+                   type="text"
+                   placeholder="Search chats..."
+                   autocomplete="off">
+        </div>
+
+        <div class="history" id="chatHistory">
+            <div class="history-title">Today</div>
+
+            <button class="history-item active"
+                    type="button"
+                    data-chat-id="1">
+                <span class="material-symbols-rounded">
+                    chat_bubble_outline
+                </span>
+                <span class="history-name">New Chat</span>
+                <span class="history-more">•••</span>
+            </button>
+        </div>
+
+        <div class="profile-area">
+            <button class="profile-button"
+                    id="profileBtn"
+                    type="button">
+
+                <div class="avatar">L</div>
+
+                <div class="profile-text">
+                    <strong>Lucas</strong>
+                    <span>lucas@gmail.com</span>
+                </div>
+
+                <span class="material-symbols-rounded profile-chevron">
+                    keyboard_arrow_down
+                </span>
+            </button>
+
+            <div class="account-menu hidden"
+                 id="accountMenu">
+
+                <div class="account-header">
+                    <div class="avatar large">L</div>
+
+                    <div>
+                        <strong>Lucas</strong>
+                        <span>lucas@gmail.com</span>
+                    </div>
+                </div>
+
+                <button class="account-item"
+                        type="button"
+                        data-modal="profileModal">
+                    <span class="material-symbols-rounded">person</span>
+                    My Profile
+                </button>
+
+                <button class="account-item"
+                        type="button"
+                        data-modal="settingsModal">
+                    <span class="material-symbols-rounded">settings</span>
+                    Settings
+                </button>
+
+                <button class="account-item"
+                        type="button"
+                        data-modal="appearanceModal">
+                    <span class="material-symbols-rounded">palette</span>
+                    Appearance
+                </button>
+
+                <button class="account-item"
+                        type="button"
+                        data-modal="memoryModal">
+                    <span class="material-symbols-rounded">psychology</span>
+                    Memory
+                </button>
+
+                <button class="account-item"
+                        type="button"
+                        data-modal="helpModal">
+                    <span class="material-symbols-rounded">help</span>
+                    Help Center
+                </button>
+
+                <button class="account-item"
+                        type="button"
+                        data-modal="accountModal">
+                    <span class="material-symbols-rounded">
+                        manage_accounts
+                    </span>
+                    Account
+                </button>
+            </div>
+        </div>
+    </aside>
+
+
+    <!-- MAIN CHAT -->
+    <main class="main" id="main">
+
+        <header class="mobile-header" id="mobileHeader">
+
+            <button class="icon-button"
+                    id="mobileMenuBtn"
+                    type="button"
+                    title="Open sidebar">
+
+                <span class="material-symbols-rounded">
+                    menu
+                </span>
+            </button>
+
+            <div class="mobile-brand">
+                <div class="brand-mark small">L</div>
+                <span>Lucas</span>
+            </div>
+
+            <button class="icon-button"
+                    id="mobileNewChatBtn"
+                    type="button"
+                    title="New chat">
+
+                <span class="material-symbols-rounded">
+                    edit_square
+                </span>
+            </button>
+
+        </header>
+
+
+        <!-- CONNECTION STATUS -->
+        <div class="top-status"
+             id="connectionStatus">
+
+            <span class="status-dot"></span>
+            <span id="connectionText">Connected</span>
+
+        </div>
+
+
+        <!-- WELCOME -->
+        <section class="welcome"
+                 id="welcomeScreen">
+
+            <div class="hero-mark">L</div>
+
+            <h1>Lucas</h1>
+
+            <p>How can I help you today?</p>
+
+            <div class="suggestions">
+
+                <button class="suggestion"
+                        type="button"
+                        data-prompt="Explain Python in simple terms">
+
+                    <span class="material-symbols-rounded">
+                        code
+                    </span>
+
+                    <strong>Explain Python</strong>
+
+                    <small>
+                        Learn coding in simple terms.
+                    </small>
+                </button>
+
+
+                <button class="suggestion"
+                        type="button"
+                        data-prompt="Help me build a website">
+
+                    <span class="material-symbols-rounded">
+                        language
+                    </span>
+
+                    <strong>Build a Website</strong>
+
+                    <small>
+                        HTML, CSS and JavaScript help.
+                    </small>
+                </button>
+
+
+                <button class="suggestion"
+                        type="button"
+                        data-prompt="Help me study for school">
+
+                    <span class="material-symbols-rounded">
+                        school
+                    </span>
+
+                    <strong>Homework Help</strong>
+
+                    <small>
+                        Study and solve school problems.
+                    </small>
+                </button>
+
+
+                <button class="suggestion"
+                        type="button"
+                        data-prompt="Give me a new coding project idea">
+
+                    <span class="material-symbols-rounded">
+                        lightbulb
+                    </span>
+
+                    <strong>Project Idea</strong>
+
+                    <small>
+                        Find something fun to build.
+                    </small>
+                </button>
+
+            </div>
+        </section>
+
+
+        <!-- MESSAGES -->
+        <section class="messages"
+                 id="chatBox"
+                 aria-live="polite"
+                 aria-label="Chat messages">
+        </section>
+
+
+        <!-- THINKING -->
+        <div class="typing hidden"
+             id="typing">
+
+            <div class="mini-mark">L</div>
+
+            <span>Lucas is thinking</span>
+
+            <div class="dots">
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+
+        </div>
+
+
+        <!-- TOOLS -->
+        <div class="tools-popover hidden"
+             id="toolsMenu">
+
+            <button type="button"
+                    data-tool="Upload File">
+
+                <span class="material-symbols-rounded">
+                    attach_file
+                </span>
+
+                Upload File
+            </button>
+
+            <button type="button"
+                    data-tool="Web Search">
+
+                <span class="material-symbols-rounded">
+                    travel_explore
+                </span>
+
+                Web Search
+            </button>
+
+            <button type="button"
+                    data-tool="Create Image">
+
+                <span class="material-symbols-rounded">
+                    image
+                </span>
+
+                Create Image
+            </button>
+
+            <button type="button"
+                    data-tool="Deep Think">
+
+                <span class="material-symbols-rounded">
+                    psychology
+                </span>
+
+                Deep Think
+            </button>
+
+            <button type="button"
+                    data-tool="Analyze Code">
+
+                <span class="material-symbols-rounded">
+                    code
+                </span>
+
+                Analyze Code
+            </button>
+
+            <button type="button"
+                    data-tool="Voice Mode">
+
+                <span class="material-symbols-rounded">
+                    mic
+                </span>
+
+                Voice Mode
+            </button>
+
+        </div>
+
+
+        <!-- VOICE -->
+        <div class="voice-bar hidden"
+             id="voiceBar">
+
+            <span class="material-symbols-rounded">
+                mic
+            </span>
+
+            <strong>Listening...</strong>
+
+            <span id="voiceText">
+                Speak to Lucas
+            </span>
+
+            <button id="stopVoiceBtn"
+                    type="button">
+                Stop
+            </button>
+
+        </div>
+
+
+        <!-- INPUT -->
+        <div class="input-wrap">
+
+            <div class="input-box">
+
+                <button class="round-button"
+                        id="plusBtn"
+                        type="button"
+                        title="Tools">
+
+                    <span class="material-symbols-rounded">
+                        add
+                    </span>
+
+                </button>
+
+
+                <textarea id="messageInput"
+                          rows="1"
+                          maxlength="10000"
+                          placeholder="Ask Lucas anything..."
+                          aria-label="Ask Lucas anything"></textarea>
+
+
+                <button class="round-button"
+                        id="micBtn"
+                        type="button"
+                        title="Dictate">
+
+                    <span class="material-symbols-rounded">
+                        mic
+                    </span>
+
+                </button>
+
+
+                <button class="send-button"
+                        id="sendBtn"
+                        type="button"
+                        disabled
+                        title="Send">
+
+                    <span class="material-symbols-rounded">
+                        arrow_upward
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <div class="warnings">
+
+                <span>
+                    Images generated by AI may be inaccurate,
+                    misleading, or offensive.
+                </span>
+
+                <span>
+                    Videos generated by AI may be inaccurate,
+                    misleading, or offensive.
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- MOBILE OVERLAY -->
+    <div class="overlay hidden"
+         id="overlay">
+    </div>
+
+
+    <!-- FILE INPUT -->
+    <input id="fileInput"
+           type="file"
+           hidden
+           multiple>
+
+
+    <!-- PROFILE MODAL -->
+    <div class="modal hidden"
+         id="profileModal">
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+                <h2>My Profile</h2>
+
+                <button class="modal-close"
+                        type="button"
+                        title="Close">
+                    ×
+                </button>
+            </div>
+
+            <div class="modal-profile">
+
+                <div class="avatar large">L</div>
+
+                <div>
+                    <strong>Lucas</strong>
+                    <span>lucas@gmail.com</span>
+                </div>
+
+            </div>
+
+            <p class="muted">
+                Your Lucas profile.
+            </p>
+
+        </div>
+    </div>
+
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal hidden"
+         id="settingsModal">
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+                <h2>Settings</h2>
+
+                <button class="modal-close"
+                        type="button"
+                        title="Close">
+                    ×
+                </button>
+            </div>
+
+            <label class="setting-row">
+
+                <span>Enter to send</span>
+
+                <input id="enterSetting"
+                       type="checkbox"
+                       checked>
+
+            </label>
+
+            <label class="setting-row">
+
+                <span>Notifications</span>
+
+                <input id="notificationSetting"
+                       type="checkbox"
+                       checked>
+
+            </label>
+
+        </div>
+    </div>
+
+
+    <!-- APPEARANCE MODAL -->
+    <div class="modal hidden"
+         id="appearanceModal">
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+                <h2>Appearance</h2>
+
+                <button class="modal-close"
+                        type="button"
+                        title="Close">
+                    ×
+                </button>
+            </div>
+
+            <label class="setting-row">
+
+                <span>Theme</span>
+
+                <select id="themeSelect">
+
+                    <option value="dark">
+                        Dark
+                    </option>
+
+                    <option value="light">
+                        Light
+                    </option>
+
+                </select>
+
+            </label>
+
+        </div>
+    </div>
+
+
+    <!-- MEMORY MODAL -->
+    <div class="modal hidden"
+         id="memoryModal">
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+                <h2>Memory</h2>
+
+                <button class="modal-close"
+                        type="button"
+                        title="Close">
+                    ×
+                </button>
+            </div>
+
+            <p class="muted">
+                Memory controls will be connected
+                to your backend later.
+            </p>
+
+            <label class="setting-row">
+
+                <span>Enable Memory</span>
+
+                <input id="memorySetting"
+                       type="checkbox"
+                       checked>
+
+            </label>
+
+        </div>
+    </div>
+
+
+    <!-- HELP MODAL -->
+    <div class="modal hidden"
+         id="helpModal">
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+                <h2>Help Center</h2>
+
+                <button class="modal-close"
+                        type="button"
+                        title="Close">
+                    ×
+                </button>
+            </div>
+
+            <p class="muted">
+                Use New Chat to start over.
+                Type a message and press Enter to send.
+            </p>
+
+        </div>
+    </div>
+
+
+    <!-- ACCOUNT MODAL -->
+    <div class="modal hidden"
+         id="accountModal">
+
+        <div class="modal-card">
+
+            <div class="modal-head">
+                <h2>Account</h2>
+
+                <button class="modal-close"
+                        type="button"
+                        title="Close">
+                    ×
+                </button>
+            </div>
+
+            <div class="modal-profile">
+
+                <div class="avatar large">L</div>
+
+                <div>
+                    <strong>Lucas</strong>
+                    <span>lucas@gmail.com</span>
+                </div>
+
+            </div>
+
+            <p class="muted">
+                Account controls are ready for
+                your Flask authentication.
+            </p>
+
+        </div>
+    </div>
+
+
+    <!-- TOAST -->
+    <div class="toast hidden"
+         id="toast"
+         role="status"
+         aria-live="polite">
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>

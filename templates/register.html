@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Register • Lucas</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/auth.css') }}">
+
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <div class="logo">
+
+            <div class="brand-mark">L</div>
+
+            <h1>Lucas</h1>
+
+        </div>
+
+        <h2>Create Your Account</h2>
+
+        <p class="subtitle">
+
+            Join Lucas today
+
+        </p>
+
+        <form
+            class="auth-form"
+            method="POST"
+            action="/register">
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                autocomplete="username"
+                required>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                autocomplete="new-password"
+                required>
+
+            <button
+                type="submit">
+
+                Register
+
+            </button>
+
+        </form>
+
+        <p class="footer">
+
+            Already have an account?
+
+            <a href="/login">
+
+                Login
+
+            </a>
+
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
