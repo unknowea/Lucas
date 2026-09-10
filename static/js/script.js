@@ -661,6 +661,36 @@ function hideTyping(){
 
 let currentChatId = null;
 let isSending = false;
+let currentMode = "work";
+
+function setMode(mode){
+    currentMode = mode;
+    const welcome = $("welcomeScreen");
+    const modeButtons = document.querySelectorAll(".mode-button");
+
+    modeButtons.forEach(btn => {
+        const isActive = btn.dataset.mode === mode;
+        btn.classList.toggle("active", isActive);
+    });
+
+    if(welcome){
+        welcome.dataset.mode = mode;
+    }
+
+    if(mode === "chat"){
+        if(welcome){
+            welcome.classList.remove("hidden");
+        }
+    }
+}
+
+if(document.querySelectorAll(".mode-button").length){
+    document.querySelectorAll(".mode-button").forEach(btn => {
+        btn.addEventListener("click", () => setMode(btn.dataset.mode));
+    });
+}
+
+setMode(currentMode);
 
 async function sendToServer(text){
     isSending = true;

@@ -602,6 +602,19 @@ textarea:hover::-webkit-scrollbar-thumb{
     overflow-y:auto;
 }
 
+.welcome-stage{
+    width:100%;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.welcome[data-mode="work"] .welcome-stage-work,
+.welcome[data-mode="chat"] .welcome-stage-chat{
+    display:flex;
+}
+
 .welcome-title{
     font-size:clamp(2.2rem, 3.2vw, 4rem);
     font-weight:500;

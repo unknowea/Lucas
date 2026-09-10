@@ -188,50 +188,35 @@ def register():
 
     if request.method == "POST":
 
-        username = request.form["username"]
+        username = request.form.get("username", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
-        password = generate_password_hash(
-            request.form["password"]
-        )
+        if not username or not email or not password:
+            return "Please complete all fields"
 
+        if User.query.filter_by(email=email).first():
+            return "Email already registered"
+
+        if User.query.filter_by(username=username).first():
+            return "Username already taken"
+
+        hashed_password = generate_password_hash(password)
 
         user = User(
             username=username,
-            password=password,
+            email=email,
+            password=hashed_password,
             display_name=username
         )
 
-
         try:
-
             db.session.add(user)
-
             db.session.commit()
-
             return redirect("/login")
-
-
         except Exception as e:
-
             db.session.rollback()
-
             return str(e)
-            return jsonify({
-                "reply": "Error: " + str(e)
-            })
-        
-        except Exception as e:
-            db.session.rollback()
-            if getattr(e, "status_code", None) == 401:
-                return jsonify({
-                    "reply": "Ollama Cloud rejected the API key. "
-                    "Update OLLAMA_API_KEY in Vercel and redeploy."
-                })
-            return jsonify({
-                "reply": "Error: " + str(e)
-            })
-
-
 
     return render_template("register.html")
 
@@ -247,33 +232,19 @@ def login():
 
     if request.method == "POST":
 
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password", "")
 
-        username = request.form["username"]
+        user = User.query.filter_by(email=email).first()
 
-        password = request.form["password"]
+        if not user:
+            user = User.query.filter_by(username=email).first()
 
-
-        user = User.query.filter_by(
-            username=username
-        ).first()
-
-
-
-        if user and check_password_hash(
-            user.password,
-            password
-        ):
-
-
+        if user and check_password_hash(user.password, password):
             session["user_id"] = user.id
-
             return redirect("/")
 
-
-
-        return "Wrong username or password"
-
-
+        return "Wrong email or password"
 
     return render_template("login.html")
 
