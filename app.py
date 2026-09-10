@@ -25,9 +25,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
 ollama_api_key = os.getenv("OLLAMA_API_KEY")
-ollama_host = os.getenv("OLLAMA_HOST")
-if not ollama_host and ollama_api_key:
-    ollama_host = "https://ollama.com"
+ollama_host = os.getenv("OLLAMA_HOST") or "http://127.0.0.1:11434"
 
 ollama_model = os.getenv(
     "OLLAMA_MODEL",
@@ -41,7 +39,7 @@ if ollama_api_key:
 ollama_client = ollama.Client(
     host=ollama_host,
     headers=ollama_headers or None
-) if ollama_host else ollama.Client()
+)
 
 
 db = SQLAlchemy(app)
@@ -305,6 +303,18 @@ def new_chat():
 # ================= CHAT =================
 
 
+def get_fallback_reply(text):
+    cleaned = (text or "").strip()
+    if not cleaned:
+        return "I’m here and ready to help."
+
+    return (
+        "Ollama is not running or not installed on this machine, so I’m using a local fallback reply. "
+        "Please install Ollama and start it at http://127.0.0.1:11434 to enable full model responses.\n\n"
+        f"Your request: {cleaned}"
+    )
+
+
 @app.route("/chat", methods=["POST"])
 def chat():
 
@@ -389,32 +399,27 @@ def chat():
 
 
 
-        response = ollama_client.chat(
-
-            model=ollama_model,
-
-            messages=[
-
-                {
-                    "role":"system",
-
-                    "content":SYSTEM_PROMPT
-                },
-
-
-                {
-                    "role":"user",
-
-                    "content":text
-                }
-
-            ]
-
-        )
-
-
-
-        reply=response["message"]["content"]
+        try:
+            response = ollama_client.chat(
+                model=ollama_model,
+                messages=[
+                    {
+                        "role":"system",
+                        "content":SYSTEM_PROMPT
+                    },
+                    {
+                        "role":"user",
+                        "content":text
+                    }
+                ]
+            )
+            reply = response["message"]["content"]
+        except Exception as exc:
+            message = str(exc).lower()
+            if "connect" in message or "ollama" in message or "failed to connect" in message or "not found" in message:
+                reply = get_fallback_reply(text)
+            else:
+                raise
 
 
 
