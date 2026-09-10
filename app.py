@@ -352,12 +352,9 @@ def ask_model(text, system_prompt=SYSTEM_PROMPT):
             raise ValueError("Empty DeepSeek response")
         except urllib.error.HTTPError as exc:
             if exc.code == 402:
-                return (
-                    "Your DeepSeek key is valid but has no available credit or billing. "
-                    "The app is falling back to the local Ollama setup. "
-                    "Please add balance or remove the key to use the local model."
-                )
-            raise
+                pass
+            else:
+                raise
 
     try:
         response = ollama_client.chat(
