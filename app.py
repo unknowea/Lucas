@@ -43,11 +43,6 @@ ollama_client = ollama.Client(
     headers=ollama_headers or None
 )
 
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
-DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
-DEEPSEEK_API_URL = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/v1/chat/completions")
-
-
 db = SQLAlchemy(app)
 
 SYSTEM_PROMPT = """
@@ -316,8 +311,8 @@ def get_fallback_reply(text):
 
     if os.getenv("VERCEL"):
         return (
-            "The AI provider is unavailable right now. Please configure a funded "
-            "DEEPSEEK_API_KEY or an OLLAMA_API_KEY in Vercel, then redeploy.\n\n"
+            "Ollama Cloud is unavailable right now. Please configure "
+            "OLLAMA_API_KEY in Vercel, then redeploy.\n\n"
             f"Your request: {cleaned}"
         )
 
@@ -329,42 +324,6 @@ def get_fallback_reply(text):
 
 
 def ask_model(text, system_prompt=SYSTEM_PROMPT):
-    if DEEPSEEK_API_KEY:
-        try:
-            payload = {
-                "model": DEEPSEEK_MODEL,
-                "messages": [
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": text}
-                ],
-                "temperature": 0.7,
-                "stream": False
-            }
-
-            req = urllib.request.Request(
-                DEEPSEEK_API_URL,
-                data=json.dumps(payload).encode("utf-8"),
-                headers={
-                    "Authorization": "Bearer " + DEEPSEEK_API_KEY,
-                    "Content-Type": "application/json",
-                    "User-Agent": "Lucas/1.0"
-                },
-                method="POST"
-            )
-
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-
-            if "choices" in data and data["choices"]:
-                return data["choices"][0]["message"]["content"]
-
-            raise ValueError("Empty DeepSeek response")
-        except urllib.error.HTTPError as exc:
-            if exc.code == 402:
-                pass
-            else:
-                raise
-
     try:
         response = ollama_client.chat(
             model=ollama_model,
