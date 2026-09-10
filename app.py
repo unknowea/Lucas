@@ -213,7 +213,8 @@ def register():
         try:
             db.session.add(user)
             db.session.commit()
-            return redirect("/login")
+            session["user_id"] = user.id
+            return redirect("/")
         except Exception as e:
             db.session.rollback()
             return str(e)
