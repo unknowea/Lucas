@@ -139,7 +139,45 @@ def home():
     return render_template("index.html", current_user=user)
 
 
+@app.route("/settings")
+@app.route("/settings/<section>")
+def settings_page(section=None):
 
+    if "user_id" not in session:
+        return redirect("/login")
+
+    user = User.query.get(session["user_id"])
+    if not user:
+        session.clear()
+        return redirect("/login")
+
+    valid_sections = [
+        "general",
+        "appearance",
+        "personalization",
+        "pets",
+        "voice",
+        "billing",
+        "usage",
+        "account",
+        "plugins",
+        "browser",
+        "coding",
+        "hooks",
+        "connections",
+        "git",
+        "environments",
+        "worktrees"
+    ]
+
+    selected = section if section in valid_sections else "general"
+
+    return render_template(
+        "settings.html",
+        current_user=user,
+        section=selected,
+        sections=valid_sections
+    )
 
 
 # ================= REGISTER =================

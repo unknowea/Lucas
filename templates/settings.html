@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings • Lucas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+</head>
+<body class="settings-page">
+<div class="settings-shell">
+    <aside class="settings-sidebar">
+        <a href="/" class="settings-back">
+            <span class="material-symbols-rounded">arrow_back</span>
+            <span>Back to app</span>
+        </a>
+
+        <label class="settings-search">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text" placeholder="Search settings...">
+        </label>
+
+        <nav class="settings-nav">
+            {% set nav = [
+                ('general', 'General'),
+                ('appearance', 'Appearance'),
+                ('personalization', 'Personalization'),
+                ('pets', 'Pets'),
+                ('voice', 'Voice'),
+                ('billing', 'Billing'),
+                ('usage', 'Usage'),
+                ('account', 'Account'),
+                ('plugins', 'Plugins'),
+                ('browser', 'Browser'),
+                ('coding', 'Coding'),
+                ('hooks', 'Hooks'),
+                ('connections', 'Connections'),
+                ('git', 'Git'),
+                ('environments', 'Environments'),
+                ('worktrees', 'Worktrees')
+            ] %}
+            {% for key, label in nav %}
+                <a href="/settings/{{ key }}" class="{{ 'active' if section == key else '' }}">
+                    <span class="material-symbols-rounded">{% if key == 'general' %}settings{% elif key == 'appearance' %}palette{% elif key == 'personalization' %}person{% elif key == 'pets' %}pets{% elif key == 'voice' %}mic{% elif key == 'billing' %}payments{% elif key == 'usage' %}analytics{% elif key == 'account' %}manage_accounts{% elif key == 'plugins' %}extension{% elif key == 'browser' %}travel_explore{% elif key == 'coding' %}code{% elif key == 'hooks' %}hub{% elif key == 'connections' %}link{% elif key == 'git' %}commit{% elif key == 'environments' %}cloud{% else %}lan{% endif %}</span>
+                    <span>{{ label }}</span>
+                </a>
+            {% endfor %}
+        </nav>
+    </aside>
+
+    <main class="settings-main">
+        <div class="settings-panel">
+            {% if section == 'general' %}
+                <div class="settings-header">General</div>
+                <div class="settings-card">
+                    <div class="settings-row"><div class="settings-row-main"><strong>Project task folder</strong><span>The location where tasks started outside of projects store their data by default.</span></div><div class="settings-value"><span class="settings-inline"><span>C:\Users\User\Documents\chatbot</span><button class="setting-select" type="button">Change</button></span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Default file open destination</strong><span>Where files and folders open by default</span></div><div class="settings-value"><button class="setting-select" type="button">VS Code</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Integrated terminal shell</strong><span>Choose which shell opens in the integrated terminal.</span></div><div class="settings-value"><button class="setting-select" type="button">PowerShell</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Language</strong><span>Language for the app UI</span></div><div class="settings-value"><button class="setting-select" type="button">Auto detect</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Bottom panel</strong><span>Show the bottom panel control in the app header</span></div><div class="settings-value"><span class="toggle"></span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Open source licenses</strong><span>Third-party notices for bundled dependencies</span></div><div class="settings-value"><button class="setting-select" type="button">View</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Plugins</strong><span>Allow ChatGPT to use installed plugins</span></div><div class="settings-value"><span class="toggle on"></span></div></div>
+                </div>
+            {% elif section == 'appearance' %}
+                <div class="settings-header">Appearance</div>
+                <div class="settings-section">
+                    <h3>Theme</h3>
+                    <div class="theme-grid">
+                        <div class="theme-card dark">
+                            <div class="theme-preview"></div>
+                            <div class="label">System</div>
+                        </div>
+                        <div class="theme-card light">
+                            <div class="theme-preview"></div>
+                            <div class="label">Light</div>
+                        </div>
+                        <div class="theme-card dark">
+                            <div class="theme-preview"></div>
+                            <div class="label">Dark</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <div class="settings-row"><div class="settings-row-main"><strong>Light theme</strong></div><div class="settings-value"><span class="settings-inline"><button class="setting-select" type="button">Import</button><button class="setting-select" type="button">Copy theme</button></span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Accent</strong></div><div class="settings-value"><span class="settings-inline"><span class="color-dot"></span><button class="setting-select" type="button">Blue</button></span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Background</strong></div><div class="settings-value"><span class="setting-input">#FFFFFF</span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Foreground</strong></div><div class="settings-value"><span class="setting-input">#1A1C1F</span></div></div>
+                </div>
+            {% elif section == 'personalization' %}
+                <div class="settings-header">Personalization</div>
+                <div class="settings-card">
+                    <div class="settings-row"><div class="settings-row-main"><strong>Base style and tone</strong><span>Set the style and tone of how ChatGPT responds to you.</span></div><div class="settings-value"><button class="setting-select" type="button">Default</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Warm</strong></div><div class="settings-value"><button class="setting-select" type="button">Default</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Enthusiastic</strong></div><div class="settings-value"><button class="setting-select" type="button">Default</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Headers & lists</strong></div><div class="settings-value"><button class="setting-select" type="button">Default</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Emoji</strong></div><div class="settings-value"><button class="setting-select" type="button">Default</button></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Fast answers</strong><span>ChatGPT can sometimes use its general knowledge to fast answer.</span></div><div class="settings-value"><span class="toggle on"></span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Custom instructions</strong></div><div class="settings-value"><span class="setting-input" style="min-width:340px;">Take a forward-thinking view.</span></div></div>
+                </div>
+            {% else %}
+                <div class="settings-header">{{ section|title }}</div>
+                <div class="settings-card">
+                    <div class="settings-row"><div class="settings-row-main"><strong>Feature enabled</strong><span>Configuration for this section is ready to be connected.</span></div><div class="settings-value"><span class="toggle on"></span></div></div>
+                    <div class="settings-row"><div class="settings-row-main"><strong>Current setting</strong><span>Use this panel to add the controls for {{ section }}.</span></div><div class="settings-value"><button class="setting-select" type="button">Default</button></div></div>
+                </div>
+            {% endif %}
+        </div>
+    </main>
+</div>
+</body>
+</html>

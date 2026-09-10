@@ -105,7 +105,7 @@
 
                 <button class="account-item"
                         type="button"
-                        data-modal="settingsModal">
+                        onclick="window.location.href='/settings'">
                     <span class="material-symbols-rounded">settings</span>
                     Settings
                 </button>
@@ -147,35 +147,20 @@
     <!-- MAIN CHAT -->
     <main class="main" id="main">
 
-        <header class="mobile-header" id="mobileHeader">
-
-            <button class="icon-button"
-                    id="mobileMenuBtn"
-                    type="button"
-                    title="Open sidebar">
-
-                <span class="material-symbols-rounded">
-                    menu
-                </span>
-            </button>
-
-            <div class="mobile-brand">
-                <div class="brand-mark small">L</div>
-                <span>Lucas</span>
+        <header class="main-topbar">
+            <div class="main-topbar-left">
+                <button class="icon-button small" id="mobileMenuBtn" type="button" title="Open sidebar">
+                    <span class="material-symbols-rounded">menu</span>
+                </button>
             </div>
 
-            <button class="icon-button"
-                    id="mobileNewChatBtn"
-                    type="button"
-                    title="New chat">
+            <div class="mode-toggle" aria-label="Chat mode toggle">
+                <button class="mode-button active" type="button">Chat</button>
+                <button class="mode-button" type="button">Work</button>
+            </div>
 
-                <span class="material-symbols-rounded">
-                    edit_square
-                </span>
-            </button>
-
+            <button class="upgrade-button" type="button">Upgrade</button>
         </header>
-
 
         <!-- CONNECTION STATUS -->
         <div class="top-status"
@@ -191,77 +176,44 @@
         <section class="welcome"
                  id="welcomeScreen">
 
-            <div class="hero-mark">L</div>
+            <h1 class="welcome-title">What should we work on?</h1>
 
-            <h1>Lucas</h1>
+            <div class="welcome-panel">
+                <div class="welcome-panel-header">
+                    <span class="panel-pill">Work with Lucas</span>
+                </div>
 
-            <p>How can I help you today?</p>
+                <div class="welcome-prompt-row">
+                    <button class="round-button compact" type="button" aria-label="Add tool">
+                        <span class="material-symbols-rounded">add</span>
+                    </button>
 
-            <div class="suggestions">
+                    <button class="prompt-suggestion" type="button" data-prompt="Ask for approval">
+                        Ask for approval
+                    </button>
 
-                <button class="suggestion"
-                        type="button"
-                        data-prompt="Explain Python in simple terms">
+                    <div class="prompt-meta">
+                        <span class="meta-badge">5.6 Terra Medium</span>
+                        <button class="icon-button small" type="button" aria-label="Send">
+                            <span class="material-symbols-rounded">arrow_upward</span>
+                        </button>
+                    </div>
+                </div>
 
-                    <span class="material-symbols-rounded">
-                        code
-                    </span>
-
-                    <strong>Explain Python</strong>
-
-                    <small>
-                        Learn coding in simple terms.
-                    </small>
-                </button>
-
-
-                <button class="suggestion"
-                        type="button"
-                        data-prompt="Help me build a website">
-
-                    <span class="material-symbols-rounded">
-                        language
-                    </span>
-
-                    <strong>Build a Website</strong>
-
-                    <small>
-                        HTML, CSS and JavaScript help.
-                    </small>
-                </button>
-
-
-                <button class="suggestion"
-                        type="button"
-                        data-prompt="Help me study for school">
-
-                    <span class="material-symbols-rounded">
-                        school
-                    </span>
-
-                    <strong>Homework Help</strong>
-
-                    <small>
-                        Study and solve school problems.
-                    </small>
-                </button>
-
-
-                <button class="suggestion"
-                        type="button"
-                        data-prompt="Give me a new coding project idea">
-
-                    <span class="material-symbols-rounded">
-                        lightbulb
-                    </span>
-
-                    <strong>Project Idea</strong>
-
-                    <small>
-                        Find something fun to build.
-                    </small>
-                </button>
-
+                <div class="mini-suggestions">
+                    <button class="mini-suggestion" type="button" data-prompt="Create a landing page for a SaaS brand">
+                        <span class="material-symbols-rounded">code</span>
+                        Create a landing page
+                    </button>
+                    <button class="mini-suggestion" type="button" data-prompt="Build a dashboard design concept">
+                        <span class="material-symbols-rounded">dashboard</span>
+                        Build a dashboard
+                    </button>
+                    <button class="mini-suggestion" type="button" data-prompt="Draft a clean product roadmap">
+                        <span class="material-symbols-rounded">fact_check</span>
+                        Draft a roadmap
+                    </button>
+                </div>
             </div>
         </section>
 
