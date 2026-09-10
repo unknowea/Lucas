@@ -321,31 +321,43 @@ def get_fallback_reply(text):
 
 def ask_model(text, system_prompt=SYSTEM_PROMPT):
     if DEEPSEEK_API_KEY:
-        payload = {
-            "model": DEEPSEEK_MODEL,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": text}
-            ],
-            "temperature": 0.7,
-            "stream": False
-        }
+        try:
+            payload = {
+                "model": DEEPSEEK_MODEL,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": text}
+                ],
+                "temperature": 0.7,
+                "stream": False
+            }
 
-        req = urllib.request.Request(
-            DEEPSEEK_API_URL,
-            data=json.dumps(payload).encode("utf-8"),
-            headers={
-                "Authorization": "Bearer " + DEEPSEEK_API_KEY,
-                "Content-Type": "application/json",
-                "User-Agent": "Lucas/1.0"
-            },
-            method="POST"
-        )
+            req = urllib.request.Request(
+                DEEPSEEK_API_URL,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={
+                    "Authorization": "Bearer " + DEEPSEEK_API_KEY,
+                    "Content-Type": "application/json",
+                    "User-Agent": "Lucas/1.0"
+                },
+                method="POST"
+            )
 
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
 
-        return data["choices"][0]["message"]["content"]
+            if "choices" in data and data["choices"]:
+                return data["choices"][0]["message"]["content"]
+
+            raise ValueError("Empty DeepSeek response")
+        except urllib.error.HTTPError as exc:
+            if exc.code == 402:
+                return (
+                    "Your DeepSeek key is valid but has no available credit or billing. "
+                    "The app is falling back to the local Ollama setup. "
+                    "Please add balance or remove the key to use the local model."
+                )
+            raise
 
     try:
         response = ollama_client.chat(
