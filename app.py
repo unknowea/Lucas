@@ -25,7 +25,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
 ollama_api_key = os.getenv("OLLAMA_API_KEY")
-ollama_host = os.getenv("OLLAMA_HOST") or "http://127.0.0.1:11434"
+ollama_host = os.getenv("OLLAMA_HOST") or (
+    "https://ollama.com" if os.getenv("VERCEL") else "http://127.0.0.1:11434"
+)
 
 ollama_model = os.getenv(
     "OLLAMA_MODEL",
@@ -311,6 +313,13 @@ def get_fallback_reply(text):
     cleaned = (text or "").strip()
     if not cleaned:
         return "I’m here and ready to help."
+
+    if os.getenv("VERCEL"):
+        return (
+            "The AI provider is unavailable right now. Please configure a funded "
+            "DEEPSEEK_API_KEY or an OLLAMA_API_KEY in Vercel, then redeploy.\n\n"
+            f"Your request: {cleaned}"
+        )
 
     return (
         "Ollama is not running or not installed on this machine, so I’m using a local fallback reply. "
