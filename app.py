@@ -41,6 +41,10 @@ ollama_client = ollama.Client(
     headers=ollama_headers or None
 )
 
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_MODEL = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+DEEPSEEK_API_URL = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/v1/chat/completions")
+
 
 db = SQLAlchemy(app)
 
@@ -315,6 +319,47 @@ def get_fallback_reply(text):
     )
 
 
+def ask_model(text, system_prompt=SYSTEM_PROMPT):
+    if DEEPSEEK_API_KEY:
+        payload = {
+            "model": DEEPSEEK_MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": text}
+            ],
+            "temperature": 0.7,
+            "stream": False
+        }
+
+        req = urllib.request.Request(
+            DEEPSEEK_API_URL,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={
+                "Authorization": "Bearer " + DEEPSEEK_API_KEY,
+                "Content-Type": "application/json",
+                "User-Agent": "Lucas/1.0"
+            },
+            method="POST"
+        )
+
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+
+        return data["choices"][0]["message"]["content"]
+
+    try:
+        response = ollama_client.chat(
+            model=ollama_model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": text}
+            ]
+        )
+        return response["message"]["content"]
+    except Exception:
+        return get_fallback_reply(text)
+
+
 @app.route("/chat", methods=["POST"])
 def chat():
 
@@ -400,20 +445,7 @@ def chat():
 
 
         try:
-            response = ollama_client.chat(
-                model=ollama_model,
-                messages=[
-                    {
-                        "role":"system",
-                        "content":SYSTEM_PROMPT
-                    },
-                    {
-                        "role":"user",
-                        "content":text
-                    }
-                ]
-            )
-            reply = response["message"]["content"]
+            reply = ask_model(text, SYSTEM_PROMPT)
         except Exception as exc:
             message = str(exc).lower()
             if "connect" in message or "ollama" in message or "failed to connect" in message or "not found" in message:
@@ -653,21 +685,7 @@ def edit_message():
         db.session.commit()
 
 
-        response = ollama_client.chat(
-            model=ollama_model,
-            messages=[
-                {
-                    "role": "system",
-                    "content": SYSTEM_PROMPT
-                },
-                {
-                    "role": "user",
-                    "content": new_text
-                }
-            ]
-        )
-
-        reply = response["message"]["content"]
+        reply = ask_model(new_text, SYSTEM_PROMPT)
 
         assistant_message = Message(
             chat_id=chat.id,
